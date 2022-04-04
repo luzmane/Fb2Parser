@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+  <description>
+    <title-info>
+      <genre>sf</genre>
+      <author>
+        <first-name>Лев</first-name>
+        <middle-name>Николаевич</middle-name>
+        <last-name>Толстой</last-name>
+        <nickname>Лев Толстой</nickname>
+        <home-page>http://example.com</home-page>
+        <home-page>https://test.com</home-page>
+        <email>a@example.com</email>
+        <email>b@test.com</email>
+        <id>1234-1234-1231</id>
+      </author>
+      <author>
+        <nickname>Лёшка</nickname>
+        <home-page>http://example.com</home-page>
+        <home-page>https://test.com</home-page>
+        <email>тшсл@example.com</email>
+        <email>фыва@test.com</email>
+        <id>4321-4321-1231</id>
+      </author>
+      <book-title>Война и мир</book-title>
+      <lang>ru</lang>
+    </title-info>
+    <document-info>
+      <author>
+        <nickname>GribUser</nickname>
+      </author>
+      <date value="2002-10-15">15 ноября 2002г., 19:53</date>
+      <id>GribUser_WarAndPeace_D49FHSH8l0HS5</id>
+      <version>2.0</version>
+    </document-info>
+  </description>
+  <body />
+</FictionBook>
