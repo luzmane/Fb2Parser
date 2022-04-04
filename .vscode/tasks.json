@@ -1,0 +1,82 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build library",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Fb2Parser/Fb2Parser.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "build test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Fb2Parser.Tests/Fb2Parser.Tests.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Fb2Parser/Fb2Parser.csproj",
+                "/property:Configuration=Release",
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "pack",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "pack",
+                "${workspaceFolder}/Fb2Parser/Fb2Parser.csproj",
+                "/property:Configuration=Release"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": ".NET Core Test with debugger",
+            "type": "process",
+            "isBackground": true,
+            "command": "dotnet",
+            "args": [
+                "test"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/Fb2Parser.Tests",
+                "env": {
+                    "VSTEST_HOST_DEBUG": "1"
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
