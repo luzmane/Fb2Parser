@@ -7,9 +7,9 @@
     <PackageId>Fb2Parser</PackageId>
     <Authors>Evgeniy Luzman</Authors>
     <Company />
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl></PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/luzmane/Fb2Parser/blob/main/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/luzmane/Fb2Parser</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/luzmane/Fb2Parser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageTags>netstandard, fb2, ebook, windows, android, ios, linux, macos</PackageTags>
@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.7.15" />
+    <PackageReference Include="NLog" Version="4.*" />
     <None Include="NLog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
