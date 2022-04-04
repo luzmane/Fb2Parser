@@ -9,7 +9,7 @@
 
     <!-- nuget setup -->
     <PackageId>Fb2Parser</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Evgeniy Luzman</Authors>
     <Description>Cross-Platform .NET library to parse Fb2 files</Description>
     <Copyright>Copyright (c) 2022 Evgeniy Luzman</Copyright>
@@ -19,7 +19,9 @@
     <RepositoryUrl>https://github.com/luzmane/Fb2Parser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>netstandard fb2 ebook windows android ios linux macos</PackageTags>
-    <PackageReleaseNotes>1.0.0 - parse fb2 file and output to XDocument format</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      1.0.1 - Fix NLog dependecy
+      1.0.0 - parse fb2 file and output to XDocument format</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Title>Cross-Platform .NET library for parse Fb2 files</Title>
     <AssemblyVersion>1.0.0</AssemblyVersion>
