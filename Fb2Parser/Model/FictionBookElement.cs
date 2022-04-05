@@ -47,7 +47,8 @@ namespace Fb2Parser.Model
 
         public FictionBook Parse(XDocument document, bool loadBookDescriptionOnly)
         {
-            Logger.Debug("Starting loading file");
+            Logger.Debug("Start parsing file");
+            Logger.Debug($"loadBookDescriptionOnly param is {loadBookDescriptionOnly}");
 
             _parsingErrors.Value = new List<IFb2Error>();
 
@@ -58,19 +59,20 @@ namespace Fb2Parser.Model
             LoadDescription(fictionBook);
             if (!loadBookDescriptionOnly)
             {
-                Logger.Debug("Processing 'body' tag");
                 LoadBodies(fictionBook);
             }
             LoadBinaries(fictionBook);
 
             ParsingErrors.AddRange(_parsingErrors.Value);
 
-            Logger.Debug("Finishing loading file");
+            Logger.Debug("End parsing file");
 
             return this;
         }
         public XDocument ToXml()
         {
+            Logger.Debug("Start xml generation");
+
             _parsingErrors.Value = new List<IFb2Error>();
 
             XDocument toReturn = new XDocument(new XDeclaration("1.0", "UTF-8", null));
@@ -85,6 +87,8 @@ namespace Fb2Parser.Model
             fictionBook.AddOptionalListToTag(Binaries);
 
             ParsingErrors.AddRange(_parsingErrors.Value);
+
+            Logger.Debug("End xml generation");
 
             return toReturn;
         }

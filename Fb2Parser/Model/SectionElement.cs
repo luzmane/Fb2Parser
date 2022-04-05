@@ -75,7 +75,7 @@ namespace Fb2Parser.Model
                     Epigraphs.Add(epigraph);
                 }
 
-                XElement? image = sectionElement.Elements(FictionBook.DefaultNamespace + TagImage).GetSingleValueOrNull(Logger);
+                XElement? image = sectionElement.Elements(FictionBook.DefaultNamespace + TagImage).FirstOrDefault();
                 int imageIndex = -1;
                 if (image != null)
                 {
@@ -139,14 +139,9 @@ namespace Fb2Parser.Model
                                                 .ToList()
                                                 .ForEach(item => ElementSwitch(item));
                     }
-                    else
-                    {
-                        Logger.Debug("There is no suitable element found");
-                    }
                 }
             }
         }
-
         private void ElementSwitch(XElement item)
         {
             switch (item.Name.LocalName)
@@ -204,18 +199,15 @@ namespace Fb2Parser.Model
             toReturn.AddOptionalTag(Annotation);
             if (Sections.Count > 0)
             {
-                Logger.Trace("Using 'section' choice for 'section' tag");
-                toReturn.AddRequiredListToTag(Sections, Logger, TagSection);
+                toReturn.AddOptionalListToTag(Sections);
             }
             else
             {
-                Logger.Trace("Using text elements choice for 'section' tag");
-                toReturn.AddRequiredListToTag(Content, Logger, TagSection);
+                toReturn.AddOptionalListToTag(Content);
             }
 
             return toReturn;
         }
-
         private readonly List<string> _firstLineTags = new List<string>()
         {
             "p",
