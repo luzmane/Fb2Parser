@@ -80,7 +80,7 @@ namespace Fb2Parser.Utils
                 element.Add(new XElement(tagName, item));
             }
         }
-        public static void AddRequiredListToTag(this XElement element, IEnumerable<IFb2Element> list, ILogger loger, string? tagName)
+        public static void AddRequiredListToTag(this XElement element, IEnumerable<IFb2Element> list, ILogger logger, string? tagName)
         {
             if (list.Any())
             {
@@ -94,12 +94,12 @@ namespace Fb2Parser.Utils
                 if (tagName is null)
                 {
                     FictionBook._parsingErrors.Value.Add(new RequiredElementInListError(element.Name.LocalName));
-                    loger.Error($"Tag '{element.Name.LocalName}' requires to have at least one child tag by standard");
+                    logger.Error($"Tag '{element.Name.LocalName}' requires to have at least one child tag by standard");
                 }
                 else
                 {
                     FictionBook._parsingErrors.Value.Add(new RequiredElementInListError(element.Name.LocalName, tagName));
-                    loger.Error($"Tag '{element.Name.LocalName}' requires to have at least one '{tagName}' by standard");
+                    logger.Error($"Tag '{element.Name.LocalName}' requires to have at least one '{tagName}' by standard");
                 }
             }
         }
