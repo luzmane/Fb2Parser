@@ -26,6 +26,10 @@ namespace Fb2Parser.Model
         public const string TagSequence = "sequence";
 
         /// <summary>
+        /// Tag self name
+        /// </summary>
+        public string ElementName { get; }
+        /// <summary>
         /// Genre of this book, with the optional match percentage
         /// </summary>
         public List<GenreElement> Genres { get; private set; } = new List<GenreElement>();
@@ -70,6 +74,11 @@ namespace Fb2Parser.Model
         /// Any sequences this book might be part of
         /// </summary>
         public List<SequenceElement> Sequences { get; private set; } = new List<SequenceElement>();
+
+        public TitleInfoElement(string elementName)
+        {
+            ElementName = elementName;
+        }
 
         public void Parse(XNode node)
         {

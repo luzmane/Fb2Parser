@@ -54,14 +54,14 @@ namespace Fb2Parser.Model
                 XElement? titleInfo = descriptionElement.Elements(FictionBook.DefaultNamespace + TagTitleInfo).GetSingleValueOrNull(Logger);
                 if (titleInfo != null)
                 {
-                    TitleInfo = new TitleInfoElement();
+                    TitleInfo = new TitleInfoElement(TagTitleInfo);
                     TitleInfo.Parse(titleInfo);
                 }
 
                 XElement? srcTitleInfo = descriptionElement.Elements(FictionBook.DefaultNamespace + TagSrcTitleInfo).GetSingleValueOrNull(Logger);
                 if (srcTitleInfo != null)
                 {
-                    SrcTitleInfo = new TitleInfoElement();
+                    SrcTitleInfo = new TitleInfoElement(TagSrcTitleInfo);
                     SrcTitleInfo.Parse(srcTitleInfo);
                 }
 
