@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 using Fb2Parser.Errors;
 using Fb2Parser.Utils;
@@ -35,6 +35,7 @@ namespace Fb2Parser.Model
 
         public static XNamespace DefaultNamespace { set; get; } = XNamespace.None;
         public static XNamespace XlinkNamespace { set; get; } = XNamespace.None;
+        public static string BookEncoding { set; get; } = "utf-8";
 
         /// <summary>
         /// This element contains an arbitrary stylesheet that is intepreted by a 
@@ -53,6 +54,8 @@ namespace Fb2Parser.Model
 
             _parsingErrors.Value = new List<IFb2Error>();
             _usedImages.Value = new List<string>();
+
+            BookEncoding = document.Declaration.Encoding;
 
             XElement fictionBook = document.Root!;
 
@@ -77,7 +80,7 @@ namespace Fb2Parser.Model
 
             _parsingErrors.Value = new List<IFb2Error>();
 
-            XDocument toReturn = new XDocument(new XDeclaration("1.0", "UTF-8", null));
+            XDocument toReturn = new XDocument(new XDeclaration("1.0", BookEncoding, null));
             XElement fictionBook = new XElement(DefaultNamespace + "FictionBook",
                         new XAttribute("xmlns", DefaultNamespace),
                         new XAttribute(XNamespace.Xmlns + "l", @"http://www.w3.org/1999/xlink"));
@@ -101,7 +104,7 @@ namespace Fb2Parser.Model
 
             XPathNavigator navigator = fictionBook.CreateNavigator();
             _ = navigator.MoveToFollowing(XPathNodeType.Element);
-            var xlinkNamespacePair = navigator.GetNamespacesInScope(XmlNamespaceScope.All).FirstOrDefault(pair => pair.Value.Contains("xlink"));
+            KeyValuePair<string, string> xlinkNamespacePair = navigator.GetNamespacesInScope(XmlNamespaceScope.All).FirstOrDefault(pair => pair.Value.Contains("xlink"));
             XlinkNamespace = fictionBook.GetNamespaceOfPrefix(xlinkNamespacePair.Key ?? "invalid") ?? XNamespace.None;
         }
         private void LoadStylesheet(XElement fictionBook)
