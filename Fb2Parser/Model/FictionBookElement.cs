@@ -20,6 +20,7 @@ namespace Fb2Parser.Model
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
         internal static readonly AsyncLocal<List<IFb2Error>> _parsingErrors = new AsyncLocal<List<IFb2Error>>();
+        internal static readonly AsyncLocal<List<string>> _usedImages = new AsyncLocal<List<string>>();
         /// <summary>
         /// Contains parsing and fb2 book generation errors. 
         /// Full errors list only after execution of ToXml() method
@@ -51,6 +52,7 @@ namespace Fb2Parser.Model
             Logger.Debug($"loadBookDescriptionOnly param is {loadBookDescriptionOnly}");
 
             _parsingErrors.Value = new List<IFb2Error>();
+            _usedImages.Value = new List<string>();
 
             XElement fictionBook = document.Root!;
 
@@ -137,6 +139,14 @@ namespace Fb2Parser.Model
                 binary.Parse(item);
                 Binaries.Add(binary);
             }
+
+            List<string?> existentBinaries = Binaries.Select(binary => binary.Id).ToList();
+            List<string> imageLinks = _usedImages.Value;
+            _ = existentBinaries.RemoveAll(item => item == null);
+            _ = existentBinaries.RemoveAll(item => imageLinks.Contains(item!));
+            _ = imageLinks.RemoveAll(item => existentBinaries.Contains(item));
+            imageLinks.ForEach(image => Logger.Warn($"Image with id {image} doesn't have appropriate image in '{TagBinary}' tags"));
+            existentBinaries.ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id {binary} that doesn't used in the book"));
         }
         private void AddBodiesToXml(XElement fictionBook)
         {

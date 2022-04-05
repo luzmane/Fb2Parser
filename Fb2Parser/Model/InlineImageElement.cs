@@ -29,6 +29,10 @@ namespace Fb2Parser.Model
             {
                 Type = imageElement.Attributes(FictionBook.XlinkNamespace + AttributeType).GetSingleValueOrNull(Logger);
                 Href = imageElement.Attributes(FictionBook.XlinkNamespace + AttributeHref).GetSingleValueOrNull(Logger);
+                if (Href != null)
+                {
+                    FictionBook._usedImages.Value.Add(Href);
+                }
                 Alt = imageElement.Attributes(AttributeAlt).GetSingleValueOrNull(Logger);
             }
         }
