@@ -143,7 +143,7 @@ namespace Fb2Parser.Model
             if (Bodies.Count == 0)
             {
                 FictionBook._parsingErrors.Value.Add(new RequiredTagError(FictionBook.TagFictionBook, FictionBook.TagBody));
-                Logger.Error($"The book doesn't have 'body' tag");
+                Logger.Error($"The book doesn't have '{FictionBook.TagBody}' tag");
             }
             else if (Bodies.Count == 1)
             {
@@ -161,20 +161,27 @@ namespace Fb2Parser.Model
                 }
                 else if (string.IsNullOrEmpty(second.Name))
                 {
-                    Logger.Warn("Incorrect order of tags 'body'");
+                    Logger.Warn($"Incorrect order of tags '{FictionBook.TagBody}'");
                     fictionBook.Add(second.ToXml());
                     fictionBook.Add(first.ToXml());
                 }
                 else
                 {
-                    Logger.Warn("Both tags 'body' has 'name' attribute");
+                    Logger.Warn($"Both tags '{FictionBook.TagBody}' has '{BodyElement.AttributeName}' attribute, removing attribute '{BodyElement.AttributeName}' from the first tag");
+                    first.Name = null;
                     fictionBook.Add(first.ToXml());
                     fictionBook.Add(second.ToXml());
                 }
             }
             else
             {
-                Logger.Warn($"The book has too much 'body' tags");
+                BodyElement first = Bodies[0];
+                if (string.IsNullOrEmpty(first.Name))
+                {
+                    Logger.Warn($"The first tags '{FictionBook.TagBody}' has '{BodyElement.AttributeName}' attribute, removing it");
+                    first.Name = null;
+                }
+                Logger.Warn($"The book has too much '{FictionBook.TagBody}' tags");
                 fictionBook.AddRequiredListToTag(Bodies, Logger, TagBody);
             }
         }
