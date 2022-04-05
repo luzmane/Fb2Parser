@@ -56,6 +56,16 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "run tests",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "test",
+                "${workspaceFolder}/Fb2Parser.Tests",
+            ],
+            "group": "test"
+        },
+        {
             "label": ".NET Core Test with debugger",
             "type": "process",
             "isBackground": true,
