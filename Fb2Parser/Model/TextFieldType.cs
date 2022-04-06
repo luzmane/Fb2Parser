@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Fb2Parser.Utils;
@@ -5,6 +6,7 @@ using NLog;
 
 namespace Fb2Parser.Model
 {
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class TextFieldType : IFb2Element
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
@@ -39,6 +41,11 @@ namespace Fb2Parser.Model
             toReturn.AddOptionalTagContent(Content);
 
             return toReturn;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"<{ElementName}>{Content}</{ElementName}>";
         }
     }
 }

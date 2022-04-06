@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Diagnostics;
 using System.Xml.Linq;
 using Fb2Parser.Errors;
 using Fb2Parser.Utils;
@@ -6,6 +6,7 @@ using NLog;
 
 namespace Fb2Parser.Model
 {
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class GenreElement : IFb2Element
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
@@ -60,6 +61,12 @@ namespace Fb2Parser.Model
             toReturn.AddRequiredTagContent(Content, Logger, TitleInfoElement.TagGenre);
 
             return toReturn;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            string match = Match is null ? string.Empty : " match=" + Match + "\"";
+            return $"<genre{match}>{Content}</genre>";
         }
     }
 }

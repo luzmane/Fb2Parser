@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Xml.Linq;
 using Fb2Parser.Utils;
 using NLog;
@@ -9,6 +9,7 @@ namespace Fb2Parser.Model
     /// <summary>
     /// Generic information about the book
     /// </summary>
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class TitleInfoElement : IFb2Element
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
@@ -162,21 +163,26 @@ namespace Fb2Parser.Model
         }
         public XNode ToXml()
         {
-            XElement toReturn = new XElement(FictionBook.DefaultNamespace + DescriptionElement.TagTitleInfo);
+            XElement toReturn = new XElement(FictionBook.DefaultNamespace + ElementName);
 
             toReturn.AddRequiredListToTag(Genres, Logger, TagGenre);
             toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor);
-            toReturn.AddRequiredTag(BookTitle, Logger, DescriptionElement.TagTitleInfo, TagBookTitle);
+            toReturn.AddRequiredTag(BookTitle, Logger, ElementName, TagBookTitle);
             toReturn.AddOptionalTag(Annotation);
             toReturn.AddOptionalTag(Keywords);
             toReturn.AddOptionalTag(Date);
             toReturn.AddOptionalTag(Coverpage);
-            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagLang, Lang, Logger, DescriptionElement.TagTitleInfo);
+            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagLang, Lang, Logger, ElementName);
             toReturn.AddOptionalStringTag(FictionBook.DefaultNamespace + TagSrcLang, SrcLang);
             toReturn.AddOptionalListToTag(Translators);
             toReturn.AddOptionalListToTag(Sequences);
 
             return toReturn;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
         }
     }
 }
