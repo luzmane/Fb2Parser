@@ -94,9 +94,9 @@ namespace Fb2Parser.Model
 
             if (FirstName != null || LastName != null)
             {
-                toReturn.AddRequiredTag(FirstName, Logger, TagFirstName, TitleInfoElement.TagAuthor);
+                toReturn.AddRequiredTag(FirstName, Logger, TagFirstName, ElementName);
                 toReturn.AddOptionalTag(MiddleName);
-                toReturn.AddRequiredTag(LastName, Logger, TagLastName, TitleInfoElement.TagAuthor);
+                toReturn.AddRequiredTag(LastName, Logger, TagLastName, ElementName);
                 toReturn.AddOptionalTag(Nickname);
                 toReturn.AddOptionalListOfStringsToTag(HomePages, FictionBook.DefaultNamespace + TagHomePage);
                 toReturn.AddOptionalListOfStringsToTag(Emails, FictionBook.DefaultNamespace + TagEmail);
@@ -104,7 +104,7 @@ namespace Fb2Parser.Model
             }
             else if (Nickname != null)
             {
-                toReturn.AddRequiredTag(Nickname, Logger, TagNickname, TitleInfoElement.TagAuthor);
+                toReturn.AddRequiredTag(Nickname, Logger, TagNickname, ElementName);
                 toReturn.AddOptionalListOfStringsToTag(HomePages, FictionBook.DefaultNamespace + TagHomePage);
                 toReturn.AddOptionalListOfStringsToTag(Emails, FictionBook.DefaultNamespace + TagEmail);
                 toReturn.AddOptionalStringTag(FictionBook.DefaultNamespace + TagId, Id);
