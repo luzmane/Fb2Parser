@@ -146,10 +146,12 @@ namespace Fb2Parser.Model
             List<string?> existentBinaries = Binaries.Select(binary => binary.Id).ToList();
             List<string> imageLinks = _usedImages.Value;
             _ = existentBinaries.RemoveAll(item => item == null);
-            _ = existentBinaries.RemoveAll(item => imageLinks.Contains(item!));
-            _ = imageLinks.RemoveAll(item => existentBinaries.Contains(item));
-            imageLinks.ForEach(image => Logger.Warn($"Image with id {image} doesn't have appropriate image in '{TagBinary}' tags"));
-            existentBinaries.ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id {binary} that doesn't used in the book"));
+            imageLinks.Except(existentBinaries)
+                      .ToList()
+                      .ForEach(image => Logger.Warn($"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"));
+            existentBinaries.Except(imageLinks)
+                            .ToList()
+                            .ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id '{binary}' that doesn't used in the book"));
         }
         private void AddBodiesToXml(XElement fictionBook)
         {
