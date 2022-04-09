@@ -75,8 +75,8 @@ namespace Fb2Parser.Model
                             // already processed
                             break;
                         default:
+                            Logger.Error($"The tag '{AnnotationElement.TagCite}' should not contain '{item.Name.LocalName}' tag");
                             FictionBook._parsingErrors.Value.Add(new NeedlessTagError(AnnotationElement.TagCite, item.Name.LocalName));
-                            Logger.Warn($"The tag '{AnnotationElement.TagCite}' should not contain '{item.Name.LocalName}' tag");
                             break;
                     }
                 }

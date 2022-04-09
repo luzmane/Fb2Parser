@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using Fb2Parser.Errors;
 using Fb2Parser.Model;
@@ -9,12 +11,37 @@ namespace Fb2Parser.Utils
 {
     public static class XElementExtensions
     {
-        public static void AddRequiredTag(this XElement element, IFb2Element? field, ILogger logger, string parentTagName, string tagName)
+        public static void AddRequiredTag(this XElement element, IFb2Element? field, ILogger logger, string parentTagName, string tagName, Type type)
         {
             if (field is null)
             {
-                FictionBook._parsingErrors.Value.Add(new RequiredTagError(parentTagName, tagName));
-                logger.Error($"Tag '{parentTagName}' requires to have '{tagName}' by standard");
+                if (FictionBook._fixMandatoryTags.Value)
+                {
+                    logger.Warn($"Creating mandatory tag '{tagName}' for '{parentTagName}'");
+                    if (typeof(IFb2Element).IsAssignableFrom(type))
+                    {
+                        ConstructorInfo constructorInfo = type.GetConstructors().Where(ctor => ctor.GetParameters().Any()).FirstOrDefault();
+                        if (constructorInfo != null)
+                        {
+                            field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
+                        }
+                        else
+                        {
+                            constructorInfo = type.GetConstructors().FirstOrDefault();
+                            field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
+                        }
+                        element.Add(field.ToXml());
+                    }
+                    else
+                    {
+                        logger.Error($"The tag is not implementing {nameof(IFb2Element)}");
+                    }
+                }
+                else
+                {
+                    logger.Error($"Tag '{parentTagName}' requires to have '{tagName}' by standard");
+                    FictionBook._parsingErrors.Value.Add(new RequiredTagError(parentTagName, tagName));
+                }
             }
             else
             {
@@ -39,8 +66,16 @@ namespace Fb2Parser.Utils
         {
             if (value is null)
             {
-                FictionBook._parsingErrors.Value.Add(new RequiredTagError(parentTagName, tagName.LocalName));
-                logger.Error($"Tag '{parentTagName}' requires to have '{tagName.LocalName}' by standard");
+                if (FictionBook._fixMandatoryTags.Value)
+                {
+                    logger.Warn($"Creating mandatory string tag for '{tagName}'");
+                    element.Add(new XElement(tagName, string.Empty));
+                }
+                else
+                {
+                    logger.Error($"Tag '{parentTagName}' requires to have '{tagName.LocalName}' by standard");
+                    FictionBook._parsingErrors.Value.Add(new RequiredTagError(parentTagName, tagName.LocalName));
+                }
             }
             else
             {
@@ -58,8 +93,16 @@ namespace Fb2Parser.Utils
         {
             if (content is null)
             {
-                FictionBook._parsingErrors.Value.Add(new RequiredContentError(parentTagName));
-                logger.Error($"Tag '{parentTagName}' should have content");
+                if (FictionBook._fixMandatoryTags.Value)
+                {
+                    logger.Warn($"Creating mandatory text node for '{parentTagName}'");
+                    element.Value = string.Empty;
+                }
+                else
+                {
+                    logger.Error($"Tag '{parentTagName}' should have content");
+                    FictionBook._parsingErrors.Value.Add(new RequiredContentError(parentTagName));
+                }
             }
             else
             {
@@ -80,7 +123,7 @@ namespace Fb2Parser.Utils
                 element.Add(new XElement(tagName, item));
             }
         }
-        public static void AddRequiredListToTag(this XElement element, IEnumerable<IFb2Element> list, ILogger logger, string? tagName)
+        public static void AddRequiredListToTag(this XElement element, IEnumerable<IFb2Element> list, ILogger logger, string tagName, Type type)
         {
             if (list.Any())
             {
@@ -91,15 +134,33 @@ namespace Fb2Parser.Utils
             }
             else
             {
-                if (tagName is null)
+                if (FictionBook._fixMandatoryTags.Value)
                 {
-                    FictionBook._parsingErrors.Value.Add(new RequiredElementInListError(element.Name.LocalName));
-                    logger.Error($"Tag '{element.Name.LocalName}' requires to have at least one child tag by standard");
+                    logger.Warn($"Creating mandatory tag '{tagName}' for '{element.Name.LocalName}'");
+                    if (typeof(IFb2Element).IsAssignableFrom(type))
+                    {
+                        IFb2Element field;
+                        ConstructorInfo constructorInfo = type.GetConstructors().Where(ctor => ctor.GetParameters().Any()).FirstOrDefault();
+                        if (constructorInfo != null)
+                        {
+                            field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
+                        }
+                        else
+                        {
+                            constructorInfo = type.GetConstructors().FirstOrDefault();
+                            field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
+                        }
+                        element.Add(field.ToXml());
+                    }
+                    else
+                    {
+                        logger.Error($"The tag is not implementing {nameof(IFb2Element)}");
+                    }
                 }
                 else
                 {
-                    FictionBook._parsingErrors.Value.Add(new RequiredElementInListError(element.Name.LocalName, tagName));
                     logger.Error($"Tag '{element.Name.LocalName}' requires to have at least one '{tagName}' by standard");
+                    FictionBook._parsingErrors.Value.Add(new RequiredElementInListError(element.Name.LocalName, tagName));
                 }
             }
         }
@@ -114,8 +175,8 @@ namespace Fb2Parser.Utils
         {
             if (attribute is null)
             {
-                FictionBook._parsingErrors.Value.Add(new RequiredAttributeError(tagName, attributeName.LocalName));
                 logger.Error($"Attribute '{attributeName}' of tag '{tagName}' is required by standard");
+                FictionBook._parsingErrors.Value.Add(new RequiredAttributeError(tagName, attributeName.LocalName));
             }
             else
             {
@@ -129,8 +190,8 @@ namespace Fb2Parser.Utils
                 XElement toReturn = enumerable.First();
                 if (enumerable.Count() > 1)
                 {
+                    Logger.Error($"The tag '{toReturn.Parent.Name.LocalName}' has more than one child tag '{toReturn.Name.LocalName}', ignoring rest");
                     FictionBook._parsingErrors.Value.Add(new IncorrectTagNumberError(toReturn.Parent.Name.LocalName, toReturn.Name.LocalName));
-                    Logger.Warn($"The tag '{toReturn.Parent.Name.LocalName}' has more than one child tag '{toReturn.Name.LocalName}', ignoring rest");
                 }
                 return toReturn;
             }

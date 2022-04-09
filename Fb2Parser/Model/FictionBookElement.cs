@@ -26,6 +26,7 @@ namespace Fb2Parser.Model
         /// Full errors list only after execution of ToXml() method
         /// </summary>
         public List<IFb2Error> ParsingErrors { get; private set; } = new List<IFb2Error>(0);
+        internal static AsyncLocal<bool> _fixMandatoryTags = new AsyncLocal<bool>();
 
         public const string TagStylesheet = "stylesheet";
         public const string TagDescription = "description";
@@ -47,13 +48,15 @@ namespace Fb2Parser.Model
         public List<BodyElement> Bodies { get; private set; } = new List<BodyElement>();
         public List<BinaryElement> Binaries { get; private set; } = new List<BinaryElement>();
 
-        public FictionBook Parse(XDocument document, bool loadBookDescriptionOnly)
+        public FictionBook Parse(XDocument document, bool loadBookDescriptionOnly, bool fixMandatory)
         {
             Logger.Debug("Start parsing file");
             Logger.Debug($"loadBookDescriptionOnly param is {loadBookDescriptionOnly}");
 
             _parsingErrors.Value = new List<IFb2Error>();
             _usedImages.Value = new List<string>();
+
+            _fixMandatoryTags.Value = fixMandatory;
 
             BookEncoding = document.Declaration.Encoding;
 
@@ -67,6 +70,7 @@ namespace Fb2Parser.Model
                 LoadBodies(fictionBook);
             }
             LoadBinaries(fictionBook);
+            CheckAllBinariesHasLinks();
 
             ParsingErrors.AddRange(_parsingErrors.Value);
 
@@ -74,6 +78,20 @@ namespace Fb2Parser.Model
 
             return this;
         }
+
+        private void CheckAllBinariesHasLinks()
+        {
+            List<string?> existentBinaries = Binaries.Select(binary => binary.Id).ToList();
+            List<string> imageLinks = _usedImages.Value;
+            _ = existentBinaries.RemoveAll(item => item == null);
+            imageLinks.Except(existentBinaries)
+                      .ToList()
+                      .ForEach(image => Logger.Warn($"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"));
+            existentBinaries.Except(imageLinks)
+                            .ToList()
+                            .ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id '{binary}' that doesn't used in the book"));
+        }
+
         public XDocument ToXml()
         {
             Logger.Debug("Start xml generation");
@@ -87,7 +105,7 @@ namespace Fb2Parser.Model
             toReturn.Add(fictionBook);
 
             fictionBook.AddOptionalListToTag(Stylesheets);
-            fictionBook.AddRequiredTag(Description, Logger, TagFictionBook, TagDescription);
+            fictionBook.AddRequiredTag(Description, Logger, TagFictionBook, TagDescription, typeof(DescriptionElement));
             AddBodiesToXml(fictionBook);
             fictionBook.AddOptionalListToTag(Binaries);
 
@@ -142,23 +160,13 @@ namespace Fb2Parser.Model
                 binary.Parse(item);
                 Binaries.Add(binary);
             }
-
-            List<string?> existentBinaries = Binaries.Select(binary => binary.Id).ToList();
-            List<string> imageLinks = _usedImages.Value;
-            _ = existentBinaries.RemoveAll(item => item == null);
-            imageLinks.Except(existentBinaries)
-                      .ToList()
-                      .ForEach(image => Logger.Warn($"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"));
-            existentBinaries.Except(imageLinks)
-                            .ToList()
-                            .ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id '{binary}' that doesn't used in the book"));
         }
         private void AddBodiesToXml(XElement fictionBook)
         {
             if (Bodies.Count == 0)
             {
-                FictionBook._parsingErrors.Value.Add(new RequiredTagError(FictionBook.TagFictionBook, FictionBook.TagBody));
                 Logger.Error($"The book doesn't have '{FictionBook.TagBody}' tag");
+                FictionBook._parsingErrors.Value.Add(new RequiredTagError(FictionBook.TagFictionBook, FictionBook.TagBody));
             }
             else if (Bodies.Count == 1)
             {
@@ -197,7 +205,7 @@ namespace Fb2Parser.Model
                     first.Name = null;
                 }
                 Logger.Warn($"The book has too much '{FictionBook.TagBody}' tags");
-                fictionBook.AddRequiredListToTag(Bodies, Logger, TagBody);
+                fictionBook.AddRequiredListToTag(Bodies, Logger, TagBody, typeof(BodyElement));
             }
         }
     }

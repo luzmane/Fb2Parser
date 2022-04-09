@@ -98,9 +98,9 @@ namespace Fb2Parser.Model
         {
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + FictionBook.TagDescription);
 
-            toReturn.AddRequiredTag(TitleInfo, Logger, FictionBook.TagDescription, TagTitleInfo);
+            toReturn.AddRequiredTag(TitleInfo, Logger, FictionBook.TagDescription, TagTitleInfo, typeof(TitleInfoElement));
             toReturn.AddOptionalTag(SrcTitleInfo);
-            toReturn.AddRequiredTag(DocumentInfo, Logger, FictionBook.TagDescription, TagDocumentInfo);
+            toReturn.AddRequiredTag(DocumentInfo, Logger, FictionBook.TagDescription, TagDocumentInfo, typeof(DocumentInfoElement));
             toReturn.AddOptionalTag(PublishInfo);
             toReturn.AddOptionalListToTag(CustomInfos);
 
@@ -109,8 +109,8 @@ namespace Fb2Parser.Model
             {
                 if (cnt > 2)
                 {
+                    Logger.Error($"The '{TagOutput}' tag should present only 2 times, skipping the rest");
                     FictionBook._parsingErrors.Value.Add(new CountTimesTagError(TagOutput, 2));
-                    Logger.Warn($"The '{TagOutput}' tag should present only 2 times, skipping the rest");
                     break;
                 }
                 toReturn.Add(output.ToXml());

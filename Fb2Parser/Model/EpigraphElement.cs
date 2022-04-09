@@ -66,8 +66,8 @@ namespace Fb2Parser.Model
                             // already processed
                             break;
                         default:
+                            Logger.Error($"The tag '{BodyElement.TagEpigraph}' should not contain '{item.Name.LocalName}' tag");
                             FictionBook._parsingErrors.Value.Add(new NeedlessTagError(BodyElement.TagEpigraph, item.Name.LocalName));
-                            Logger.Warn($"The tag '{BodyElement.TagEpigraph}' should not contain '{item.Name.LocalName}' tag");
                             break;
                     }
                 }

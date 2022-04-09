@@ -62,7 +62,7 @@ namespace Fb2Parser.Model
             toReturn.AddOptionalAttribute(XNamespace.Xml + AttributeLang, Lang);
             toReturn.AddOptionalTag(Title);
             toReturn.AddOptionalTag(Subtitle);
-            toReturn.AddRequiredListToTag(Vs, Logger, TagLine);
+            toReturn.AddRequiredListToTag(Vs, Logger, TagLine, typeof(ParagraphType));
 
             return toReturn;
         }

@@ -29,7 +29,7 @@ namespace Fb2Parser.Model
         {
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + TitleInfoElement.TagCoverpage);
 
-            toReturn.AddRequiredListToTag(Images, Logger, TagImage);
+            toReturn.AddRequiredListToTag(Images, Logger, TagImage, typeof(InlineImageElement));
 
             return toReturn;
         }

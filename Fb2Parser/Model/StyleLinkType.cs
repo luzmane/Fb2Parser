@@ -67,8 +67,8 @@ namespace Fb2Parser.Model
                                 Content.Add(image);
                                 break;
                             default:
+                                Logger.Error($"The tag '{ElementName}' should not contain '{formattedText.Name.LocalName}' tag");
                                 FictionBook._parsingErrors.Value.Add(new NeedlessTagError(ElementName, formattedText.Name.LocalName));
-                                Logger.Warn($"The tag '{ElementName}' should not contain '{formattedText.Name.LocalName}' tag");
                                 break;
                         }
                     }

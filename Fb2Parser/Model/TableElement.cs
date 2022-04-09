@@ -42,7 +42,7 @@ namespace Fb2Parser.Model
 
             toReturn.AddOptionalAttribute(AttributeStyle, Style);
             toReturn.AddOptionalAttribute(AttributeId, Id);
-            toReturn.AddRequiredListToTag(TableRows, Logger, TagTableRow);
+            toReturn.AddRequiredListToTag(TableRows, Logger, TagTableRow, typeof(TableRowElement));
 
             return toReturn;
         }

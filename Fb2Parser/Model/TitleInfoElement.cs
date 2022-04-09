@@ -165,9 +165,9 @@ namespace Fb2Parser.Model
         {
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + ElementName);
 
-            toReturn.AddRequiredListToTag(Genres, Logger, TagGenre);
-            toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor);
-            toReturn.AddRequiredTag(BookTitle, Logger, ElementName, TagBookTitle);
+            toReturn.AddRequiredListToTag(Genres, Logger, TagGenre, typeof(GenreElement));
+            toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor, typeof(AuthorElement));
+            toReturn.AddRequiredTag(BookTitle, Logger, ElementName, TagBookTitle, typeof(TextFieldType));
             toReturn.AddOptionalTag(Annotation);
             toReturn.AddOptionalTag(Keywords);
             toReturn.AddOptionalTag(Date);

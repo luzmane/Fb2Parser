@@ -17,8 +17,8 @@ namespace Fb2Parser.Utils
                 XAttribute toReturn = enumerable.First();
                 if (enumerable.Count() > 1)
                 {
+                    Logger.Error($"The tag '{toReturn.Parent.Name.LocalName}' has more than one attribute '{toReturn.Name.LocalName}', ignoring rest");
                     FictionBook._parsingErrors.Value.Add(new IncorrectAttributeNumberError(toReturn.Parent.Name.LocalName, toReturn.Name.LocalName));
-                    Logger.Warn($"The tag '{toReturn.Parent.Name.LocalName}' has more than one attribute '{toReturn.Name.LocalName}', ignoring rest");
                 }
                 return toReturn.Value;
             }

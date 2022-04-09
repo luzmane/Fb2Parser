@@ -29,8 +29,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"Unable to parse '{AttributeMatch}' attribute: {match}");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(TitleInfoElement.TagGenre, AttributeMatch, match));
-                        Logger.Warn($"Unable to parse '{AttributeMatch}' attribute: {match}");
                     }
                 }
 

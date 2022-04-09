@@ -32,8 +32,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributeAlign}' attribute of '{TableElement.TagTableRow}' tag is incorrect: '{alignType}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(TableElement.TagTableRow, AttributeAlign, alignType));
-                        Logger.Warn($"'{AttributeAlign}' attribute of '{TableElement.TagTableRow}' tag is incorrect: '{alignType}'");
                     }
                 }
 
@@ -48,8 +48,8 @@ namespace Fb2Parser.Model
                             Content.Add(tableData);
                             break;
                         default:
+                            Logger.Error($"The tag '{TableElement.TagTableRow}' should not contain '{item.Name.LocalName}' tag");
                             FictionBook._parsingErrors.Value.Add(new NeedlessTagError(TableElement.TagTableRow, item.Name.LocalName));
-                            Logger.Warn($"The tag '{TableElement.TagTableRow}' should not contain '{item.Name.LocalName}' tag");
                             break;
                     }
                 }
@@ -60,7 +60,7 @@ namespace Fb2Parser.Model
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + TableElement.TagTableRow);
 
             toReturn.AddOptionalAttribute(AttributeAlign, Align?.ToString());
-            toReturn.AddRequiredListToTag(Content, Logger, TagTableData);
+            toReturn.AddRequiredListToTag(Content, Logger, TagTableData, typeof(TableDataElement));
 
             return toReturn;
         }

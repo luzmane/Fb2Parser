@@ -119,8 +119,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{TagVersion}' tag is not valid number: {version}");
                         FictionBook._parsingErrors.Value.Add(new IllegalTagError(TagVersion, version));
-                        Logger.Warn($"'{TagVersion}' tag is not valid number: {version}");
                     }
                 }
 
@@ -143,9 +143,9 @@ namespace Fb2Parser.Model
         {
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + DescriptionElement.TagDocumentInfo);
 
-            toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor);
+            toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor, typeof(AuthorElement));
             toReturn.AddOptionalTag(ProgramUsed);
-            toReturn.AddRequiredTag(Date, Logger, DescriptionElement.TagDocumentInfo, TagDate);
+            toReturn.AddRequiredTag(Date, Logger, DescriptionElement.TagDocumentInfo, TagDate, typeof(DateType));
             toReturn.AddOptionalListOfStringsToTag(SrcUrl, FictionBook.DefaultNamespace + TagSrcUrl);
             toReturn.AddOptionalTag(SrcOcr);
             toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagId, Id, Logger, DescriptionElement.TagDocumentInfo);

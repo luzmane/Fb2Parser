@@ -45,8 +45,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributeInclude}' attribute of '{OutputElement.TagPart}' tag is incorrect: '{docType}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(OutputElement.TagPart, AttributeInclude, docType));
-                        Logger.Warn($"'{AttributeInclude}' attribute of '{OutputElement.TagPart}' tag is incorrect: '{docType}'");
                     }
                 }
             }

@@ -96,8 +96,8 @@ namespace Fb2Parser.Model
                             // already processed
                             break;
                         default:
+                            Logger.Error($"The tag '{SectionElement.TagPoem}' should not contain '{item.Name.LocalName}' tag");
                             FictionBook._parsingErrors.Value.Add(new NeedlessTagError(SectionElement.TagPoem, item.Name.LocalName));
-                            Logger.Warn($"The tag '{SectionElement.TagPoem}' should not contain '{item.Name.LocalName}' tag");
                             break;
                     }
                 }
@@ -111,7 +111,7 @@ namespace Fb2Parser.Model
             toReturn.AddOptionalAttribute(XNamespace.Xml + AttributeId, Id);
             toReturn.AddOptionalTag(Title);
             toReturn.AddOptionalListToTag(Epigraphs);
-            toReturn.AddRequiredListToTag(Content, Logger, null);
+            toReturn.AddRequiredListToTag(Content, Logger, TagSubtitle, typeof(ParagraphType));
             toReturn.AddOptionalListToTag(TextAuthors);
             toReturn.AddOptionalTag(Date);
 

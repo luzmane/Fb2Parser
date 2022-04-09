@@ -47,8 +47,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributeCreate}' attribute of '{OutputElement.TagOutputDocumentClass}' tag is incorrect: '{docType}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(OutputElement.TagOutputDocumentClass, AttributeCreate, docType));
-                        Logger.Warn($"'{AttributeCreate}' attribute of '{OutputElement.TagOutputDocumentClass}' tag is incorrect: '{docType}'");
                     }
                 }
 
@@ -61,8 +61,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributePrice}' attribute of '{OutputElement.TagOutputDocumentClass}' tag is incorrect: '{price}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(OutputElement.TagOutputDocumentClass, AttributePrice, price));
-                        Logger.Warn($"'{AttributePrice}' attribute of '{OutputElement.TagOutputDocumentClass}' tag is incorrect: '{price}'");
                     }
                 }
             }

@@ -42,8 +42,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributeIncludeAll}' attribute of '{DescriptionElement.TagOutput}' tag is incorrect: '{docType}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(DescriptionElement.TagOutput, AttributeIncludeAll, docType));
-                        Logger.Warn($"'{AttributeIncludeAll}' attribute of '{DescriptionElement.TagOutput}' tag is incorrect: '{docType}'");
                     }
                 }
 
@@ -56,8 +56,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributeMode}' attribute of '{DescriptionElement.TagOutput}' tag is incorrect: '{shareModesType}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(DescriptionElement.TagOutput, AttributeMode, shareModesType));
-                        Logger.Warn($"'{AttributeMode}' attribute of '{DescriptionElement.TagOutput}' tag is incorrect: '{shareModesType}'");
                     }
                 }
 
@@ -71,8 +71,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributePrice}' attribute of '{DescriptionElement.TagOutput}' tag is incorrect: '{price}'");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(DescriptionElement.TagOutput, AttributePrice, price));
-                        Logger.Warn($"'{AttributePrice}' attribute of '{DescriptionElement.TagOutput}' tag is incorrect: '{price}'");
                     }
                 }
 
@@ -93,8 +93,8 @@ namespace Fb2Parser.Model
                             Content.Add(outputDocumentClassElement);
                             break;
                         default:
+                            Logger.Error($"The tag '{DescriptionElement.TagOutput}' should not contain '{item.Name.LocalName}' tag");
                             FictionBook._parsingErrors.Value.Add(new NeedlessTagError(DescriptionElement.TagOutput, item.Name.LocalName));
-                            Logger.Warn($"The tag '{DescriptionElement.TagOutput}' should not contain '{item.Name.LocalName}' tag");
                             break;
                     }
                 }

@@ -42,8 +42,8 @@ namespace Fb2Parser.Model
                             Content.Add(emptyLine);
                             break;
                         default:
+                            Logger.Error($"The tag '{BodyElement.TagTitle}' should not contain '{item.Name.LocalName}' tag");
                             FictionBook._parsingErrors.Value.Add(new NeedlessTagError(BodyElement.TagTitle, item.Name.LocalName));
-                            Logger.Warn($"The tag '{BodyElement.TagTitle}' should not contain '{item.Name.LocalName}' tag");
                             break;
                     }
                 }

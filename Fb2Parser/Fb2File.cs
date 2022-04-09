@@ -18,10 +18,11 @@ namespace Fb2Parser
         /// </summary>
         /// <param name="bookStream">Fb2 file as a stream</param>
         /// <param name="loadBookDescriptionOnly">Load all parts except 'body' tags flag</param>
+        /// <param name="fixMandatory">Fix mandatory tag with empty values</param>
         /// <returns>FictionBook object</returns>
-        public static FictionBook Parse(StreamReader bookStream, bool loadBookDescriptionOnly = false)
+        public static FictionBook Parse(StreamReader bookStream, bool loadBookDescriptionOnly = false, bool fixMandatory = true)
         {
-            return new FictionBook().Parse(XDocument.Load(bookStream), loadBookDescriptionOnly);
+            return new FictionBook().Parse(XDocument.Load(bookStream), loadBookDescriptionOnly, fixMandatory);
         }
 
         /// <summary>
@@ -30,22 +31,22 @@ namespace Fb2Parser
         /// <param name="bookStream">Fb2 file as a stream</param>
         /// <param name="loadBookDescriptionOnly">Load all parts except 'body' tags flag</param>
         /// <returns>FictionBook object</returns>
-        public static Task<FictionBook> ParseAsync(StreamReader bookStream, bool loadBookDescriptionOnly = false)
+        public static Task<FictionBook> ParseAsync(StreamReader bookStream, bool loadBookDescriptionOnly = false, bool fixMandatory = true)
         {
-            return Task.Factory.StartNew(() => Parse(bookStream, loadBookDescriptionOnly));
+            return Task.Factory.StartNew(() => Parse(bookStream, loadBookDescriptionOnly, fixMandatory));
         }
-        public static FictionBook Parse(string filePath, string? encoding = null, bool loadBookDescriptionOnly = false)
+        public static FictionBook Parse(string filePath, string? encoding = null, bool loadBookDescriptionOnly = false, bool fixMandatory = true)
         {
             if (encoding is null)
             {
                 encoding = DetectEncoding(filePath);
             }
             using StreamReader bookStream = new StreamReader(filePath, Encoding.GetEncoding(encoding));
-            return new FictionBook().Parse(XDocument.Load(bookStream), loadBookDescriptionOnly);
+            return new FictionBook().Parse(XDocument.Load(bookStream), loadBookDescriptionOnly, fixMandatory);
         }
-        public static Task<FictionBook> ParseAsync(string filePath, string? encoding = null, bool loadBookDescriptionOnly = false)
+        public static Task<FictionBook> ParseAsync(string filePath, string? encoding = null, bool loadBookDescriptionOnly = false, bool fixMandatory = true)
         {
-            return Task.Factory.StartNew(() => Parse(filePath, encoding, loadBookDescriptionOnly));
+            return Task.Factory.StartNew(() => Parse(filePath, encoding, loadBookDescriptionOnly, fixMandatory));
         }
         private static string DetectEncoding(string filePath)
         {

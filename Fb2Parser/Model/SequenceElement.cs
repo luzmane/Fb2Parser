@@ -38,8 +38,8 @@ namespace Fb2Parser.Model
                     }
                     else
                     {
+                        Logger.Error($"'{AttributeNumber}' tag is not valid number: {number}. Skipping");
                         FictionBook._parsingErrors.Value.Add(new IllegalAttributeError(TitleInfoElement.TagSequence, AttributeNumber, number));
-                        Logger.Warn($"'{AttributeNumber}' tag is not valid number: {number}. Skipping");
                     }
                 }
 
