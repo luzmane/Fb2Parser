@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Fb2Parser.Utils;
@@ -18,7 +17,7 @@ namespace Fb2Parser.Model
         public string? Href { set; get; }
         public string? Alt { set; get; }
 
-        public void Parse(XNode node)
+        public virtual void Parse(XNode node)
         {
             if (FictionBook.XlinkNamespace == XNamespace.None)
             {
@@ -36,7 +35,7 @@ namespace Fb2Parser.Model
                 Alt = imageElement.Attributes(AttributeAlt).GetSingleValueOrNull(Logger);
             }
         }
-        public XNode ToXml()
+        public virtual XNode ToXml()
         {
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + StyleLinkType.TagImage);
 

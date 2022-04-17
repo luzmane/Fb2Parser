@@ -27,6 +27,8 @@ namespace Fb2Parser.Model
         /// </summary>
         public List<IFb2Error> ParsingErrors { get; private set; } = new List<IFb2Error>(0);
         internal static AsyncLocal<bool> _fixMandatoryTags = new AsyncLocal<bool>();
+        internal static AsyncLocal<List<string>> _binariesIds = new AsyncLocal<List<string>>();
+        internal static AsyncLocal<bool> _removeNotExistingImageLinks = new AsyncLocal<bool>();
 
         public const string TagStylesheet = "stylesheet";
         public const string TagDescription = "description";
@@ -48,15 +50,22 @@ namespace Fb2Parser.Model
         public List<BodyElement> Bodies { get; private set; } = new List<BodyElement>();
         public List<BinaryElement> Binaries { get; private set; } = new List<BinaryElement>();
 
-        public FictionBook Parse(XDocument document, bool loadBookDescriptionOnly, bool fixMandatory)
+        public FictionBook Parse(XDocument document, Fb2ParsingSettings? settings)
         {
             Logger.Debug("Start parsing file");
-            Logger.Debug($"loadBookDescriptionOnly param is {loadBookDescriptionOnly}");
+            if (settings is null)
+            {
+                Logger.Info("Using default parse settings");
+                settings = new Fb2ParsingSettings();
+            }
+
+            Logger.Debug($"Load book description only is {settings.LoadBookDescriptionOnly}");
 
             _parsingErrors.Value = new List<IFb2Error>();
             _usedImages.Value = new List<string>();
 
-            _fixMandatoryTags.Value = fixMandatory;
+            _fixMandatoryTags.Value = settings.AddMissingMandatoryTags;
+            _removeNotExistingImageLinks.Value = settings.RemoveImagesNotInBinaries;
 
             BookEncoding = document.Declaration.Encoding;
 
@@ -65,7 +74,7 @@ namespace Fb2Parser.Model
             LoadNamespaces(fictionBook);
             LoadStylesheet(fictionBook);
             LoadDescription(fictionBook);
-            if (!loadBookDescriptionOnly)
+            if (!settings.LoadBookDescriptionOnly)
             {
                 LoadBodies(fictionBook);
             }
@@ -78,20 +87,6 @@ namespace Fb2Parser.Model
 
             return this;
         }
-
-        private void CheckAllBinariesHasLinks()
-        {
-            List<string?> existentBinaries = Binaries.Select(binary => binary.Id).ToList();
-            List<string> imageLinks = _usedImages.Value;
-            _ = existentBinaries.RemoveAll(item => item == null);
-            imageLinks.Except(existentBinaries)
-                      .ToList()
-                      .ForEach(image => Logger.Warn($"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"));
-            existentBinaries.Except(imageLinks)
-                            .ToList()
-                            .ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id '{binary}' that doesn't used in the book"));
-        }
-
         public XDocument ToXml()
         {
             Logger.Debug("Start xml generation");
@@ -116,6 +111,17 @@ namespace Fb2Parser.Model
             return toReturn;
         }
 
+        private void CheckAllBinariesHasLinks()
+        {
+            _binariesIds.Value.AddRange(Binaries.Where(bin => bin.Id != null).Select(binary => binary.Id!).ToList());
+            List<string> imageLinks = _usedImages.Value;
+            imageLinks.Except(_binariesIds.Value)
+                      .ToList()
+                      .ForEach(image => Logger.Warn($"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"));
+            _binariesIds.Value.Except(imageLinks)
+                            .ToList()
+                            .ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id '{binary}' that doesn't used in the book"));
+        }
         private static void LoadNamespaces(XElement fictionBook)
         {
             DefaultNamespace = fictionBook.GetDefaultNamespace() ?? XNamespace.None;

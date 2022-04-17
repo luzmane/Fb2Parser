@@ -95,7 +95,7 @@ namespace Fb2Parser.Model
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + ElementName);
 
             toReturn.AddOptionalAttribute(XNamespace.Xml + AttributeLang, Lang);
-            toReturn.AddOptionalListToTag(Content);
+            toReturn.AddOptionalListWithImageToTag(Content, Logger);
 
             return toReturn;
         }

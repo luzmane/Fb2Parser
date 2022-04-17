@@ -82,7 +82,7 @@ namespace Fb2Parser.Model
 
             toReturn.AddOptionalAttribute(XNamespace.Xml + AttributeLang, Lang);
             toReturn.AddOptionalAttribute(AttributeName, Name);
-            toReturn.AddOptionalTag(Image);
+            toReturn.AddOptionalImageTag(Image, Logger);
             toReturn.AddOptionalTag(Title);
             toReturn.AddOptionalListToTag(Epigraphs);
             toReturn.AddOptionalListToTag(Sections);

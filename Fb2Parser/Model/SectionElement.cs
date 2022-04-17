@@ -195,7 +195,7 @@ namespace Fb2Parser.Model
             toReturn.AddOptionalAttribute(XNamespace.Xml + AttributeLang, Lang);
             toReturn.AddOptionalTag(Title);
             toReturn.AddOptionalListToTag(Epigraphs);
-            toReturn.AddOptionalTag(Image);
+            toReturn.AddOptionalImageTag(Image, Logger);
             toReturn.AddOptionalTag(Annotation);
             if (Sections.Count > 0)
             {
@@ -203,7 +203,7 @@ namespace Fb2Parser.Model
             }
             else
             {
-                toReturn.AddOptionalListToTag(Content);
+                toReturn.AddOptionalListWithImageToTag(Content, Logger);
             }
 
             return toReturn;

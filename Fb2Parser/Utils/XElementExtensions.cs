@@ -13,7 +13,8 @@ namespace Fb2Parser.Utils
     {
         public static void AddRequiredTag(this XElement element, IFb2Element? field, ILogger logger, string parentTagName, string tagName, Type type)
         {
-            if (field is null)
+            XNode? item = field?.ToXml();
+            if (item is null)
             {
                 if (FictionBook._fixMandatoryTags.Value)
                 {
@@ -45,15 +46,12 @@ namespace Fb2Parser.Utils
             }
             else
             {
-                element.Add(field.ToXml());
+                element.Add(item);
             }
         }
         public static void AddOptionalTag(this XElement element, IFb2Element? field)
         {
-            if (field != null)
-            {
-                element.Add(field.ToXml());
-            }
+            element.Add(field?.ToXml());
         }
         public static void AddOptionalStringTag(this XElement element, XName tagName, string? value)
         {
@@ -116,6 +114,20 @@ namespace Fb2Parser.Utils
                 element.Add(item.ToXml());
             }
         }
+        public static void AddOptionalListWithImageToTag(this XElement element, IEnumerable<IFb2Element> list, ILogger logger)
+        {
+            foreach (IFb2Element item in list)
+            {
+                if (item is InlineImageElement image)
+                {
+                    element.AddOptionalImageTag(image, logger);
+                }
+                else
+                {
+                    element.Add(item.ToXml());
+                }
+            }
+        }
         public static void AddOptionalListOfStringsToTag(this XElement element, IEnumerable<string> list, XName tagName)
         {
             foreach (string item in list)
@@ -164,6 +176,72 @@ namespace Fb2Parser.Utils
                 }
             }
         }
+        public static void AddRequiredListWithImagesToTag(this XElement element, List<InlineImageElement> list, ILogger logger)
+        {
+            if (list.Any())
+            {
+                if (FictionBook._removeNotExistingImageLinks.Value)
+                {
+                    List<string> binaries = FictionBook._binariesIds.Value;
+                    bool hasFullImage = false;
+                    foreach (InlineImageElement image in list)
+                    {
+                        if (image.Href != null && !binaries.Contains(image.Href[1..]))
+                        {
+                            image.Href = null;
+                            image.Alt = null;
+                            image.Type = null;
+                            if (image is ImageElement item)
+                            {
+                                item.Id = null;
+                                item.Title = null;
+                            }
+                        }
+                        else
+                        {
+                            hasFullImage = true;
+                        }
+                    }
+
+                    if (hasFullImage)
+                    {
+                        _ = list.RemoveAll(item => IsEmptyImage(item));
+                    }
+                    else
+                    {
+                        if (list.Count > 1)
+                        {
+                            list.RemoveRange(1, list.Count - 1);
+                        }
+                    }
+                }
+
+                foreach (IFb2Element item in list)
+                {
+                    element.Add(item.ToXml());
+                }
+            }
+            else
+            {
+                if (FictionBook._fixMandatoryTags.Value)
+                {
+                    logger.Warn($"Creating mandatory tag 'image' for '{element.Name.LocalName}'");
+                    ConstructorInfo? constructorInfo = typeof(InlineImageElement).GetConstructors().FirstOrDefault();
+                    if (constructorInfo is null)
+                    {
+                        logger.Error($"Unable to find ctor for {typeof(InlineImageElement)}");
+                        return;
+                    }
+                    InlineImageElement image = (InlineImageElement)constructorInfo.Invoke(new object[] { });
+                    element.Add(image.ToXml());
+                }
+                else
+                {
+                    logger.Error($"Tag '{element.Name.LocalName}' requires to have at least one 'image' by standard");
+                    FictionBook._parsingErrors.Value.Add(new RequiredElementInListError(element.Name.LocalName, "image"));
+                }
+            }
+        }
         public static void AddOptionalAttribute(this XElement element, XName attributeName, string? attribute)
         {
             if (attribute != null)
@@ -196,6 +274,37 @@ namespace Fb2Parser.Utils
                 return toReturn;
             }
             return null;
+        }
+        public static void AddOptionalImageTag(this XElement element, InlineImageElement? image, ILogger Logger)
+        {
+            if (image is null)
+            {
+                return;
+            }
+            if (FictionBook._removeNotExistingImageLinks.Value)
+            {
+                if (image.Href == null
+                    || FictionBook._binariesIds.Value.Contains(image.Href[1..]))
+                {
+                    element.AddOptionalTag(image);
+                }
+                else
+                {
+                    Logger.Warn($"Remove image with href '{image.Href}' since there are no binaries with such id exists");
+                }
+            }
+            else
+            {
+                element.AddOptionalTag(image);
+            }
+        }
+
+        private static bool IsEmptyImage(InlineImageElement image)
+        {
+            return image.Href == null
+                    && image.Alt == null
+                    && image.Type == null
+                    && (!(image is ImageElement elem) || (elem.Id == null && elem.Title == null));
         }
     }
 }
