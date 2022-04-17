@@ -167,12 +167,12 @@ namespace Fb2Parser.Model
 
             toReturn.AddRequiredListToTag(Genres, Logger, TagGenre, typeof(GenreElement));
             toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor, typeof(AuthorElement));
-            toReturn.AddRequiredTag(BookTitle, Logger, ElementName, TagBookTitle, typeof(TextFieldType));
+            toReturn.AddRequiredTag(BookTitle, Logger, TagBookTitle, typeof(TextFieldType));
             toReturn.AddOptionalTag(Annotation);
             toReturn.AddOptionalTag(Keywords);
             toReturn.AddOptionalTag(Date);
             toReturn.AddOptionalTag(Coverpage);
-            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagLang, Lang, Logger, ElementName);
+            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagLang, Lang, Logger);
             toReturn.AddOptionalStringTag(FictionBook.DefaultNamespace + TagSrcLang, SrcLang);
             toReturn.AddOptionalListToTag(Translators);
             toReturn.AddOptionalListToTag(Sequences);

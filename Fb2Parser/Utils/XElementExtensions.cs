@@ -11,14 +11,14 @@ namespace Fb2Parser.Utils
 {
     public static class XElementExtensions
     {
-        public static void AddRequiredTag(this XElement element, IFb2Element? field, ILogger logger, string parentTagName, string tagName, Type type)
+        public static void AddRequiredTag(this XElement element, IFb2Element? field, ILogger logger, string tagName, Type type)
         {
             XNode? item = field?.ToXml();
             if (item is null)
             {
                 if (FictionBook._fixMandatoryTags.Value)
                 {
-                    logger.Warn($"Creating mandatory tag '{tagName}' for '{parentTagName}'");
+                    logger.Warn($"Creating mandatory tag '{tagName}' for '{element.Name.LocalName}'");
                     if (typeof(IFb2Element).IsAssignableFrom(type))
                     {
                         ConstructorInfo constructorInfo = type.GetConstructors().Where(ctor => ctor.GetParameters().Any()).FirstOrDefault();
@@ -40,8 +40,8 @@ namespace Fb2Parser.Utils
                 }
                 else
                 {
-                    logger.Error($"Tag '{parentTagName}' requires to have '{tagName}' by standard");
-                    FictionBook._parsingErrors.Value.Add(new RequiredTagError(parentTagName, tagName));
+                    logger.Error($"Tag '{element.Name.LocalName}' requires to have '{tagName}' by standard");
+                    FictionBook._parsingErrors.Value.Add(new RequiredTagError(element.Name.LocalName, tagName));
                 }
             }
             else
@@ -60,7 +60,7 @@ namespace Fb2Parser.Utils
                 element.Add(new XElement(tagName, value));
             }
         }
-        public static void AddRequiredStringTag(this XElement element, XName tagName, string? value, ILogger logger, string parentTagName)
+        public static void AddRequiredStringTag(this XElement element, XName tagName, string? value, ILogger logger)
         {
             if (value is null)
             {
@@ -71,8 +71,8 @@ namespace Fb2Parser.Utils
                 }
                 else
                 {
-                    logger.Error($"Tag '{parentTagName}' requires to have '{tagName.LocalName}' by standard");
-                    FictionBook._parsingErrors.Value.Add(new RequiredTagError(parentTagName, tagName.LocalName));
+                    logger.Error($"Tag '{element.Name.LocalName}' requires to have '{tagName.LocalName}' by standard");
+                    FictionBook._parsingErrors.Value.Add(new RequiredTagError(element.Name.LocalName, tagName.LocalName));
                 }
             }
             else
@@ -87,19 +87,19 @@ namespace Fb2Parser.Utils
                 element.Value = content;
             }
         }
-        public static void AddRequiredTagContent(this XElement element, string? content, ILogger logger, string parentTagName)
+        public static void AddRequiredTagContent(this XElement element, string? content, ILogger logger)
         {
             if (content is null)
             {
                 if (FictionBook._fixMandatoryTags.Value)
                 {
-                    logger.Warn($"Creating mandatory text node for '{parentTagName}'");
+                    logger.Warn($"Creating mandatory text node for '{element.Name.LocalName}'");
                     element.Value = string.Empty;
                 }
                 else
                 {
-                    logger.Error($"Tag '{parentTagName}' should have content");
-                    FictionBook._parsingErrors.Value.Add(new RequiredContentError(parentTagName));
+                    logger.Error($"Tag '{element.Name.LocalName}' should have content");
+                    FictionBook._parsingErrors.Value.Add(new RequiredContentError(element.Name.LocalName));
                 }
             }
             else

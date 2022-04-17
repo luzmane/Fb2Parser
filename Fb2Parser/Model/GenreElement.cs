@@ -58,7 +58,7 @@ namespace Fb2Parser.Model
                 }
             }
 
-            toReturn.AddRequiredTagContent(Content, Logger, TitleInfoElement.TagGenre);
+            toReturn.AddRequiredTagContent(Content, Logger);
 
             return toReturn;
         }

@@ -145,11 +145,11 @@ namespace Fb2Parser.Model
 
             toReturn.AddRequiredListToTag(Authors, Logger, TagAuthor, typeof(AuthorElement));
             toReturn.AddOptionalTag(ProgramUsed);
-            toReturn.AddRequiredTag(Date, Logger, DescriptionElement.TagDocumentInfo, TagDate, typeof(DateType));
+            toReturn.AddRequiredTag(Date, Logger, TagDate, typeof(DateType));
             toReturn.AddOptionalListOfStringsToTag(SrcUrl, FictionBook.DefaultNamespace + TagSrcUrl);
             toReturn.AddOptionalTag(SrcOcr);
-            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagId, Id, Logger, DescriptionElement.TagDocumentInfo);
-            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagVersion, Version, Logger, DescriptionElement.TagDocumentInfo);
+            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagId, Id, Logger);
+            toReturn.AddRequiredStringTag(FictionBook.DefaultNamespace + TagVersion, Version, Logger);
             toReturn.AddOptionalTag(History);
             toReturn.AddOptionalListToTag(Publishers);
 

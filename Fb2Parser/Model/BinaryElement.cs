@@ -35,7 +35,7 @@ namespace Fb2Parser.Model
 
             toReturn.AddRequiredAttribute(AttributeContentType, ContentType, Logger, FictionBook.TagBinary);
             toReturn.AddRequiredAttribute(AttributeId, Id, Logger, FictionBook.TagBinary);
-            toReturn.AddRequiredTagContent(Content, Logger, FictionBook.TagBinary);
+            toReturn.AddRequiredTagContent(Content, Logger);
 
             return toReturn;
         }

@@ -94,9 +94,9 @@ namespace Fb2Parser.Model
 
             if (FirstName != null || LastName != null)
             {
-                toReturn.AddRequiredTag(FirstName, Logger, ElementName, TagFirstName, typeof(TextFieldType));
+                toReturn.AddRequiredTag(FirstName, Logger, TagFirstName, typeof(TextFieldType));
                 toReturn.AddOptionalTag(MiddleName);
-                toReturn.AddRequiredTag(LastName, Logger, ElementName, TagLastName, typeof(TextFieldType));
+                toReturn.AddRequiredTag(LastName, Logger, TagLastName, typeof(TextFieldType));
                 toReturn.AddOptionalTag(Nickname);
                 toReturn.AddOptionalListOfStringsToTag(HomePages, FictionBook.DefaultNamespace + TagHomePage);
                 toReturn.AddOptionalListOfStringsToTag(Emails, FictionBook.DefaultNamespace + TagEmail);
@@ -104,7 +104,7 @@ namespace Fb2Parser.Model
             }
             else if (Nickname != null)
             {
-                toReturn.AddRequiredTag(Nickname, Logger, ElementName, TagNickname, typeof(TextFieldType));
+                toReturn.AddRequiredTag(Nickname, Logger, TagNickname, typeof(TextFieldType));
                 toReturn.AddOptionalListOfStringsToTag(HomePages, FictionBook.DefaultNamespace + TagHomePage);
                 toReturn.AddOptionalListOfStringsToTag(Emails, FictionBook.DefaultNamespace + TagEmail);
                 toReturn.AddOptionalStringTag(FictionBook.DefaultNamespace + TagId, Id);
@@ -114,7 +114,7 @@ namespace Fb2Parser.Model
                 if (FictionBook._fixMandatoryTags.Value)
                 {
                     Logger.Warn($"There is no suitable child set found for '{ElementName}' tag. Creating empty 'nickname' tag");
-                    toReturn.AddRequiredTag(new TextFieldType(TagNickname), Logger, TagNickname, ElementName, typeof(TextFieldType));
+                    toReturn.AddRequiredTag(new TextFieldType(TagNickname), Logger, TagNickname, typeof(TextFieldType));
                 }
                 else
                 {

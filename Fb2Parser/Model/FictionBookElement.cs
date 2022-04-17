@@ -100,7 +100,7 @@ namespace Fb2Parser.Model
             toReturn.Add(fictionBook);
 
             fictionBook.AddOptionalListToTag(Stylesheets);
-            fictionBook.AddRequiredTag(Description, Logger, TagFictionBook, TagDescription, typeof(DescriptionElement));
+            fictionBook.AddRequiredTag(Description, Logger, TagDescription, typeof(DescriptionElement));
             AddBodiesToXml(fictionBook);
             fictionBook.AddOptionalListToTag(Binaries);
 
