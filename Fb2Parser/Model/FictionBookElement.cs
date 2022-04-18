@@ -63,7 +63,7 @@ namespace Fb2Parser.Model
 
             _parsingErrors.Value = new List<IFb2Error>();
             _usedImages.Value = new List<string>();
-
+            _binariesIds.Value = new List<string>();
             _fixMandatoryTags.Value = settings.AddMissingMandatoryTags;
             _removeNotExistingImageLinks.Value = settings.RemoveImagesNotInBinaries;
 
@@ -117,7 +117,9 @@ namespace Fb2Parser.Model
             List<string> imageLinks = _usedImages.Value;
             imageLinks.Except(_binariesIds.Value)
                       .ToList()
-                      .ForEach(image => Logger.Warn($"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"));
+                      .ForEach(image => Logger.Warn(
+                        $"Image with id '{image}' doesn't have appropriate image in '{TagBinary}' tags"
+                            + (FictionBook._removeNotExistingImageLinks.Value ? ". Remove from the book" : "")));
             _binariesIds.Value.Except(imageLinks)
                             .ToList()
                             .ForEach(binary => Logger.Warn($"'{TagBinary}' has image with id '{binary}' that doesn't used in the book"));
