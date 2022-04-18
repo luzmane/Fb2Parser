@@ -24,12 +24,14 @@ namespace Fb2Parser.Utils
                         ConstructorInfo constructorInfo = type.GetConstructors().Where(ctor => ctor.GetParameters().Any()).FirstOrDefault();
                         if (constructorInfo != null)
                         {
+                            logger.Debug($"Creating {type.Name} with param {tagName}");
                             field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
                         }
                         else
                         {
+                            logger.Debug($"Creating {type.Name} without parameters");
                             constructorInfo = type.GetConstructors().FirstOrDefault();
-                            field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
+                            field = (IFb2Element)constructorInfo.Invoke(new object[] { });
                         }
                         element.Add(field.ToXml());
                     }
@@ -155,12 +157,14 @@ namespace Fb2Parser.Utils
                         ConstructorInfo constructorInfo = type.GetConstructors().Where(ctor => ctor.GetParameters().Any()).FirstOrDefault();
                         if (constructorInfo != null)
                         {
+                            logger.Debug($"Creating {type.Name} with param {tagName}");
                             field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
                         }
                         else
                         {
+                            logger.Debug($"Creating {type.Name} without parameters");
                             constructorInfo = type.GetConstructors().FirstOrDefault();
-                            field = (IFb2Element)constructorInfo.Invoke(new object[] { tagName });
+                            field = (IFb2Element)constructorInfo.Invoke(new object[] { });
                         }
                         element.Add(field.ToXml());
                     }
