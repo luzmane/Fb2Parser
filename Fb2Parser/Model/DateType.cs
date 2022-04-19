@@ -34,7 +34,7 @@ namespace Fb2Parser.Model
 
             toReturn.AddOptionalAttribute(XNamespace.Xml + AttributeLang, Lang);
             toReturn.AddOptionalAttribute(AttributeValue, Value);
-            toReturn.AddOptionalTagContent(Content);
+            toReturn.AddTagContent(Content);
 
             return toReturn;
         }

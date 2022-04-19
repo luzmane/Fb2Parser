@@ -32,7 +32,7 @@ namespace Fb2Parser.Model
             XElement toReturn = new XElement(FictionBook.DefaultNamespace + FictionBook.TagStylesheet);
 
             toReturn.AddRequiredAttribute(AttributeType, Type, Logger, FictionBook.TagStylesheet);
-            toReturn.AddOptionalTagContent(Content);
+            toReturn.AddTagContent(Content);
 
             return toReturn;
         }

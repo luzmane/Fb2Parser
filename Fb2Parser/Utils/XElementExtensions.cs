@@ -82,12 +82,9 @@ namespace Fb2Parser.Utils
                 element.Add(new XElement(tagName, value));
             }
         }
-        public static void AddOptionalTagContent(this XElement element, string? content)
+        public static void AddTagContent(this XElement element, string? content)
         {
-            if (content != null)
-            {
-                element.Value = content;
-            }
+            element.Value = content ?? string.Empty;
         }
         public static void AddRequiredTagContent(this XElement element, string? content, ILogger logger)
         {
