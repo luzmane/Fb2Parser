@@ -15,7 +15,7 @@
     <Copyright>Copyright (c) 2022 Evgeniy Luzman</Copyright>
     <PackageProjectUrl>https://github.com/luzmane/Fb2Parser</PackageProjectUrl>
     <!--PackageIcon></PackageIcon-->
-    <!--PackageReadmeFile></PackageReadmeFile-->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/luzmane/Fb2Parser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>netstandard fb2 ebook windows android ios linux macos</PackageTags>
@@ -32,6 +32,10 @@
   <ItemGroup>
     <PackageReference Include="NLog" Version="4.*" />
     <None Include="NLog.config" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
