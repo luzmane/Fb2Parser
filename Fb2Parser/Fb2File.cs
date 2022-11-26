@@ -21,7 +21,7 @@ namespace Fb2Parser
         /// <returns>FictionBook object</returns>
         public static FictionBook Parse(StreamReader bookStream, Fb2ParsingSettings? settings = null)
         {
-            return new FictionBook().Parse(XDocument.Load(bookStream), settings);
+            return new FictionBook().Parse(XDocument.Load(bookStream, LoadOptions.PreserveWhitespace), settings);
         }
 
         /// <summary>
@@ -36,14 +36,8 @@ namespace Fb2Parser
         }
         public static FictionBook Parse(string filePath, Fb2ParsingSettings? settings = null)
         {
-            if (settings is null)
-            {
-                settings = new Fb2ParsingSettings();
-            }
-            if (settings.Encoding is null)
-            {
-                settings.Encoding = DetectEncoding(filePath);
-            }
+            settings ??= new Fb2ParsingSettings();
+            settings.Encoding ??= DetectEncoding(filePath);
             using StreamReader bookStream = new StreamReader(filePath, Encoding.GetEncoding(settings.Encoding));
             return Parse(bookStream, settings);
         }

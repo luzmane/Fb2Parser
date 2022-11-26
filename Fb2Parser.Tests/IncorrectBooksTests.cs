@@ -20,7 +20,10 @@ namespace Fb2Parser.Tests
         [OneTimeSetUp]
         public void FictionBookSetUp()
         {
-            _fictionBook = Fb2File.Parse(File.OpenText(@"demo/incorrect.fb2"), false);
+            _fictionBook = Fb2File.Parse(File.OpenText(@"demo/incorrect.fb2"), new Fb2ParsingSettings()
+            {
+                LoadBookDescriptionOnly = true
+            });
             _ = _fictionBook.ToXml();
         }
 
