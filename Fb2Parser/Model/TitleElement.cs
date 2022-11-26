@@ -48,6 +48,13 @@ namespace Fb2Parser.Model
                     }
                 }
 
+                if (!string.IsNullOrWhiteSpace(titleElement.Value) && Content.Count == 0)
+                {
+                    Content.Add(new SimpleText()
+                    {
+                        Text = titleElement.Value
+                    });
+                }
             }
         }
         public XNode ToXml()
