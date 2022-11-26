@@ -50,15 +50,9 @@ namespace Fb2Parser.Model
         public List<BodyElement> Bodies { get; private set; } = new List<BodyElement>();
         public List<BinaryElement> Binaries { get; private set; } = new List<BinaryElement>();
 
-        public FictionBook Parse(XDocument document, Fb2ParsingSettings? settings)
+        public FictionBook Parse(XDocument document, Fb2ParsingSettings settings)
         {
             Logger.Debug("Start parsing file");
-            if (settings is null)
-            {
-                Logger.Info("Using default parse settings");
-                settings = new Fb2ParsingSettings();
-            }
-
             Logger.Debug($"Load book description only is {settings.LoadBookDescriptionOnly}");
 
             _parsingErrors.Value = new List<IFb2Error>();

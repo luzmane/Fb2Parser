@@ -1,5 +1,3 @@
-using System;
-
 namespace Fb2Parser
 {
     public class Fb2ParsingSettings
@@ -20,6 +18,12 @@ namespace Fb2Parser
         /// File encoding
         /// </summary>
         public string? Encoding { get; set; } = null;
+
+        /// <summary>
+        /// Transparent parameter for <see cref="System.Xml.Linq.LoadOptions"/> 
+        /// of <see cref="System.Xml.Linq.XDocument"/> to preserve whitespace during xml processing
+        /// </summary>
+        public bool PreserveWhitespace { get; set; } = true;
 
         public override string ToString()
         {

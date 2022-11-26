@@ -21,7 +21,9 @@ namespace Fb2Parser
         /// <returns>FictionBook object</returns>
         public static FictionBook Parse(StreamReader bookStream, Fb2ParsingSettings? settings = null)
         {
-            return new FictionBook().Parse(XDocument.Load(bookStream, LoadOptions.PreserveWhitespace), settings);
+            settings ??= new Fb2ParsingSettings();
+            LoadOptions preserveWhitespace = settings.PreserveWhitespace ? LoadOptions.PreserveWhitespace : LoadOptions.None;
+            return new FictionBook().Parse(XDocument.Load(bookStream, preserveWhitespace), settings);
         }
 
         /// <summary>
